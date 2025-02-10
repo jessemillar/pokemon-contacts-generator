@@ -16,7 +16,6 @@
       <progress id="progressBar" value="0" max="100"></progress>
 
       <button onclick="generateVCard()">Generate and Download vCard (.vcf)</button>
-      <button onclick="generateCSV()">Generate and Download Google CSV (.csv)</button>
     </main>
 
     <script>
@@ -43,25 +42,11 @@
 
         for (let i = 1; i <= POKEMON_COUNT; i++) {
           const { name, imageUrl } = await getPokemonDetails(i);
-          vcfContent += `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nPHOTO;VALUE=URI:${imageUrl}\nEND:VCARD\n\n`;
+          vcfContent += `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nN:${name}\nPHOTO;VALUE=URI:${imageUrl}\nEND:VCARD\n\n`;
           progressBar.value = (i / POKEMON_COUNT) * 100;
         }
 
         downloadFile(vcfContent, "pokemon_contacts.vcf", "text/vcard");
-      }
-
-      async function generateCSV() {
-        const POKEMON_COUNT = await getPokemonCount();
-        let csvContent = "Name,Given Name,Photo URL\n";
-        const progressBar = document.getElementById("progressBar");
-
-        for (let i = 1; i <= POKEMON_COUNT; i++) {
-          const { name, imageUrl } = await getPokemonDetails(i);
-          csvContent += `${name},${name},${imageUrl}\n`;
-          progressBar.value = (i / POKEMON_COUNT) * 100;
-        }
-
-        downloadFile(csvContent, "pokemon_contacts.csv", "text/csv");
       }
 
       function downloadFile(content, filename, mimeType) {
